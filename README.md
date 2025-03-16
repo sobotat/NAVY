@@ -33,7 +33,7 @@ Cílem bylo předpovědět výsledek logické operace XOR, kterou nelze řešit 
 ## Proces implementace
 1. **Struktura sítě**:
    - Vytvoření tříd: `Neuron`, `Layer` a `NeuralNetwork`.
-   - Rozdělení sítě na vrstvy: skrytá vrstva a výstupní vrstva.
+   - Rozdělení sítě na vrstvy: skrytá vrstva (2 Neurony) a výstupní vrstva (1 Neuron).
 
 2. **Trénovací metoda (`fit`)**:
    - Propagace vstupních dat skrz síť a získání výsledků.
