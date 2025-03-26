@@ -2,6 +2,7 @@ import tkinter
 from tkinter import Button, PhotoImage, Canvas, OptionMenu, StringVar
 from enum import Enum
 from lib.exercises.cv04.map import Map, TileType
+from lib.exercises.cv04.qlearning_player import QLearningPlayer
 
 class Mode(Enum):
     Add = 0
@@ -14,6 +15,7 @@ class QLearningApp:
         self.add_option = TileType.Wall
         
         self.map = Map(10, 10)
+        self.player = None
 
     def run(self):
         self.root = tkinter.Tk()
@@ -89,14 +91,30 @@ class QLearningApp:
 
                     self.canvas.create_image(x * 30 + offset_x, y * 30 + offset_y, image=tile_image, anchor="nw")
 
+                if self.player is not None and (self.player.x == x and self.player.y == y):
+                    tile_image = PhotoImage(file=tiles_res[TileType.Player])
+                    self.images.append(tile_image)
+
+                    offset_x = (30 - tile_image.width()) // 2
+                    offset_y = (30 - tile_image.height()) // 2
+
+                    self.canvas.create_image(x * 30 + offset_x, y * 30 + offset_y, image=tile_image, anchor="nw")
+                    
+
 
     def on_clicked_run(self):
-        pass
+        if self.player is None:
+            print("Add Player to Map")
+            return
+        
+        self.player.move()
+        self.draw_canvas()
 
     def on_click_add(self):
         self.mode = Mode.Add
 
     def on_selected_add_option(self, option:str):
+        self.mode = Mode.Add
         self.add_option = TileType[option]
 
     def on_click_remove(self):
@@ -108,11 +126,17 @@ class QLearningApp:
         
         match(self.mode):
             case Mode.Add:
-                print(f"Adding on {x} {y} {self.add_option.name}")
-                self.map.set_tile(x, y, self.add_option)
+                print(f"Adding on {x} {y} {self.add_option.name}")                
+                if self.add_option == TileType.Player:
+                    self.player = QLearningPlayer(x, y, self.map)
+                else:
+                    self.map.set_tile(x, y, self.add_option)
             case Mode.Remove:
                 print(f"Removing on {x} {y}")
-                self.map.set_tile(x, y, TileType.Empty)
+                if self.player is not None and (self.player.x == x and self.player.y == y):
+                    self.player = None
+                else:
+                    self.map.set_tile(x, y, TileType.Empty)
 
         self.draw_canvas()
 
