@@ -4,6 +4,7 @@ import matplotlib.pyplot as plt
 from lib.utils.menu import Menu, Color
 from lib.exercises.cv01.perceptron import Perceptron
 from lib.exercises.cv02.neural_network import NeuralNetwork, Layer
+from lib.exercises.cv04.qlearning_app import QLearningApp
 
 def perceptron_test():
     np.random.seed(13)
@@ -77,6 +78,7 @@ def main():
     mainMenu = Menu("Select Exercise", [
         'Perceptron',
         'XOR problem',
+        'QLearning',
         'Exit'
     ])
 
@@ -87,6 +89,8 @@ def main():
                     perceptron_test()
                 case 'xor-problem':
                     xor_problem_test()
+                case 'qlearning':
+                    QLearningApp().run()
                 case None | 'exit':
                     break
         except KeyboardInterrupt:
