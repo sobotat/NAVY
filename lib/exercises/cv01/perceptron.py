@@ -1,6 +1,6 @@
 import numpy as np
 from lib.utils.progressbar import ProgressBar
-from lib.exercises.activation_function import ActivationFunction    
+from lib.exercises.cv01.activation_function import ActivationFunction    
 
 class Perceptron:
 

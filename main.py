@@ -2,8 +2,8 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 from lib.utils.menu import Menu, Color
-from lib.exercises.perceptron import Perceptron
-from lib.exercises.neural_network import NeuralNetwork, Layer
+from lib.exercises.cv01.perceptron import Perceptron
+from lib.exercises.cv02.neural_network import NeuralNetwork, Layer
 
 def perceptron_test():
     np.random.seed(13)
