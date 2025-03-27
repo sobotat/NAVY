@@ -34,3 +34,10 @@ class Map:
         if y >= self.size_y:
             return False
         return True
+    
+    def contains_tile(self, type:TileType):
+        for row in self.map:
+            for tile in row:
+                if tile == type:
+                    return True
+        return False

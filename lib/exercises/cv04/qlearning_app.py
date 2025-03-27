@@ -3,6 +3,7 @@ from tkinter import Button, PhotoImage, Canvas, OptionMenu, StringVar
 from enum import Enum
 from lib.exercises.cv04.map import Map, TileType
 from lib.exercises.cv04.qlearning_player import QLearningPlayer
+from lib.exercises.cv04.q_table import QTable
 
 class Mode(Enum):
     Add = 0
@@ -11,11 +12,13 @@ class Mode(Enum):
 class QLearningApp:
 
     def __init__(self):
-        self.mode = None
+        self.mode = Mode.Add
         self.add_option = TileType.Wall
         
         self.map = Map(10, 10)
         self.player = None
+        self.table = QTable(0.7, 5)
+        self.running = False
 
     def run(self):
         self.root = tkinter.Tk()
@@ -30,8 +33,8 @@ class QLearningApp:
         run_button = Button(root, text="Run", command=self.on_clicked_run)
         run_button.grid(row=0, column=1, sticky="ew")
 
-        add_button = Button(root, text="Add Mode", command=self.on_click_add)
-        add_button.grid(row=1, column=1, sticky="ew")
+        run_without_ui_button = Button(root, text="Run Without UI", command=self.on_clicked_run_without_ui)
+        run_without_ui_button.grid(row=1, column=1, sticky="ew")
 
         add_options = [ 
             TileType.Wall.name, 
@@ -45,6 +48,12 @@ class QLearningApp:
 
         remove_button = Button(root, text="Remove Mode", command=self.on_click_remove)
         remove_button.grid(row=3, column=1, sticky="ew")
+
+        low_epsilon_button = Button(root, text="Low Epsilon", command=lambda: self.set_epsilon(0.1))
+        low_epsilon_button.grid(row=4, column=1, sticky="ew")
+
+        high_epsilon_button = Button(root, text="High Epsilon", command=lambda: self.set_epsilon(0.7))
+        high_epsilon_button.grid(row=5, column=1, sticky="ew")
         
         self.canvas = Canvas(root, width=30 * self.map.size_x, height=30 * self.map.size_y, background="#0e1c56")
         self.canvas.bind("<Button-1>", self.on_click_canvas)
@@ -52,6 +61,27 @@ class QLearningApp:
         self.draw_canvas()
 
         root.mainloop()
+
+    def run_qlearning(self, with_ui=True):
+        if self.running == True:
+            self.running = False
+            return
+        
+        if self.player is None:
+            print("Add Player to Map")
+            return
+        
+        self.running = True
+        while self.map.contains_tile(TileType.Tresure) and self.running:
+            self.player.update()
+            if with_ui:
+                self.draw_canvas()
+            self.root.update()
+
+        self.player.update()
+        self.draw_canvas()
+        print(f"Finished Running")
+        self.running = False
 
     def set_window_size(self, root, window_width, window_height):
         screen_width = root.winfo_screenwidth()
@@ -99,19 +129,16 @@ class QLearningApp:
                     offset_y = (30 - tile_image.height()) // 2
 
                     self.canvas.create_image(x * 30 + offset_x, y * 30 + offset_y, image=tile_image, anchor="nw")
+        self.canvas.update()
                     
-
+    def set_epsilon(self, value):
+        self.table.epsilon = value
 
     def on_clicked_run(self):
-        if self.player is None:
-            print("Add Player to Map")
-            return
-        
-        self.player.move()
-        self.draw_canvas()
+        self.run_qlearning()
 
-    def on_click_add(self):
-        self.mode = Mode.Add
+    def on_clicked_run_without_ui(self):
+        self.run_qlearning(with_ui=False)
 
     def on_selected_add_option(self, option:str):
         self.mode = Mode.Add
@@ -128,7 +155,7 @@ class QLearningApp:
             case Mode.Add:
                 print(f"Adding on {x} {y} {self.add_option.name}")                
                 if self.add_option == TileType.Player:
-                    self.player = QLearningPlayer(x, y, self.map)
+                    self.player = QLearningPlayer(x, y, self.table, self.map)
                 else:
                     self.map.set_tile(x, y, self.add_option)
             case Mode.Remove:
