@@ -4,6 +4,7 @@ import matplotlib.pyplot as plt
 from lib.utils.menu import Menu, Color
 from lib.exercises.cv01.perceptron import Perceptron
 from lib.exercises.cv02.neural_network import NeuralNetwork, Layer
+from lib.exercises.cv03.hopfield_app import HopfieldApp
 from lib.exercises.cv04.qlearning_app import QLearningApp
 
 def perceptron_test():
@@ -78,6 +79,7 @@ def main():
     mainMenu = Menu("Select Exercise", [
         'Perceptron',
         'XOR problem',
+        'Hopfield',
         'QLearning',
         'Exit'
     ])
@@ -89,6 +91,8 @@ def main():
                     perceptron_test()
                 case 'xor-problem':
                     xor_problem_test()
+                case 'hopfield':
+                    HopfieldApp().run()
                 case 'qlearning':
                     QLearningApp().run()
                 case None | 'exit':
