@@ -71,6 +71,9 @@ class QLearningApp:
             print("Add Player to Map")
             return
         
+        self.player.spawn_x = self.player.x
+        self.player.spawn_y = self.player.y
+        
         self.running = True
         while self.map.contains_tile(TileType.Tresure) and self.running:
             self.player.update()
