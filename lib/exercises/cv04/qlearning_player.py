@@ -3,6 +3,7 @@ from lib.exercises.cv04.map import Map, TileType
 from lib.exercises.cv04.direction import Direction
 from enum import Enum
 import random
+from queue import PriorityQueue
 
 class Action(Enum):
     GoLeft = 0
@@ -10,6 +11,7 @@ class Action(Enum):
     GoTop = 2
     GoBottom = 3
     PickupTresure = 4
+    
 actions = [Action.GoLeft, Action.GoRight, Action.GoTop, Action.GoBottom, Action.PickupTresure]
 
 class QLearningPlayer:
@@ -127,7 +129,7 @@ class QLearningPlayer:
                 else:
                     print("No Tresure to Pickup")
 
-    def get_state(self) -> str:
+    def get_state(self, use_simple_tresure_location=False) -> str:
         map = self.map
 
         left_tile   = map.get_tile(self.x - 1, self.y) if map.is_valid_position(self.x - 1, self.y) else TileType.Wall
@@ -135,14 +137,13 @@ class QLearningPlayer:
         top_tile    = map.get_tile(self.x, self.y - 1) if map.is_valid_position(self.x, self.y - 1) else TileType.Wall
         bottom_tile = map.get_tile(self.x, self.y + 1) if map.is_valid_position(self.x, self.y + 1) else TileType.Wall
         center_tile = map.get_tile(self.x, self.y) if map.is_valid_position(self.x, self.y) else TileType.Wall
-        tresure_dir = self.get_direction_to_tresure()
+        tresure_dir = self.get_simple_direction_to_tresure() if use_simple_tresure_location else self.get_astar_direction_to_tresure()
 
         state = f"{left_tile.name}_{right_tile.name}_{top_tile.name}_{bottom_tile.name}_{center_tile.name}_{tresure_dir.name if tresure_dir is not None else None}"
         return state
     
-        
-    def get_direction_to_tresure(self) -> Direction | None:
-        def get_tresure_location():
+
+    def get_tresure_location(self):
             for x in range(self.map.size_x):
                 for y in range(self.map.size_y):
                     tile = self.map.get_tile(x, y)
@@ -150,7 +151,8 @@ class QLearningPlayer:
                         return x, y
             return None
         
-        location = get_tresure_location()
+    def get_simple_direction_to_tresure(self) -> Direction | None:
+        location = self.get_tresure_location()
         if location is None:
             return None
         
@@ -163,3 +165,35 @@ class QLearningPlayer:
             return Direction.Left if self.x > tresure_x else Direction.Right
         else:
             return Direction.Top if self.y > tresure_y else Direction.Bottom
+
+    def get_astar_direction_to_tresure(self) -> Direction | None:
+        def heuristic(a, b): 
+            return abs(a[0] - b[0]) + abs(a[1] - b[1])
+        
+        def get_neighbors(x, y):
+            return [(nx, ny) for nx, ny in [(x-1, y), (x+1, y), (x, y-1), (x, y+1)] if self.map.is_valid_position(nx, ny) and self.map.get_tile(nx, ny) not in [TileType.Wall, TileType.Trap]]
+        
+        def get_direction(path):
+            if len(path) < 2: return None
+            dx, dy = path[1][0] - path[0][0], path[1][1] - path[0][1]
+            return {(-1, 0): Direction.Left, (1, 0): Direction.Right, (0, -1): Direction.Top, (0, 1): Direction.Bottom}.get((dx, dy))
+
+        start_location, tresure_location = (self.x, self.y), self.get_tresure_location()
+        if not tresure_location: 
+            return None
+
+        open_set, came_from, g_score = PriorityQueue(), {}, {start_location: 0}
+        open_set.put((0, start_location))
+
+        while not open_set.empty():
+            _, current = open_set.get()
+            if current == tresure_location:
+                path = [current]
+                while current in came_from: path.append(current := came_from[current])
+                return get_direction(path[::-1])
+            for neighbor in get_neighbors(*current):
+                tentative_g = g_score[current] + 1
+                if neighbor not in g_score or tentative_g < g_score[neighbor]:
+                    came_from[neighbor], g_score[neighbor] = current, tentative_g
+                    open_set.put((tentative_g + heuristic(neighbor, tresure_location), neighbor))
+        return None
