@@ -46,3 +46,42 @@ Cílem bylo předpovědět výsledek logické operace XOR, kterou nelze řešit 
 
 ## Výsledek
 Neuronová síť správně naučila operaci XOR a dokáže ji přesně klasifikovat.
+
+
+# Hopfield Network
+## Popis problému
+Cílem bylo vytvořit Hopfieldovu síť, která dokáže ukládat a následně rekonstruovat binární vzory. Síť funguje jako asociativní paměť, která se dokáže vrátit k nejbližšímu uloženému vzoru i při částečně poškozeném vstupu.
+
+## Proces implementace
+1. **Struktura sítě**:
+   - Implementace třídy `HopfieldNetwork` s metodami pro učení a rekonstrukci vzorů.
+   - Reprezentace neuronů pomocí binárních hodnot (1 a -1).
+
+2. **Trénovací metoda (`train`)**:
+   - Použití Hebbova pravidla pro aktualizaci vah.
+   - Vytvoření symetrické váhové matice bez vlastních smyček.
+
+3. **Rekonstrukční metoda (`recall`)**:
+   - Iterativní aktualizace stavů neuronů na základě vstupního vzoru.
+   - Stabilizace sítě do jednoho z uložených vzorů.
+
+### Synchronní a Asynchronní Aktualizace
+
+**Synchronní aktualizace**:
+- Všechny neurony v síti jsou aktualizovány současně v jednom kroku.
+- Tento přístup může vést k rychlejší stabilizaci sítě, ale někdy může způsobit oscilace nebo nestabilitu, pokud jsou vzory příliš složité nebo konfliktní.
+
+**Asynchronní aktualizace**:
+- Neurony se aktualizují postupně, jeden po druhém, v náhodném nebo předem definovaném pořadí.
+- Tento přístup často umožňuje lepší konvergenci k uloženým vzorům, protože eliminuje možnost oscilací způsobených současnou aktualizací všech neuronů.
+- Je také biologicky realističtější, protože v biologických neuronových sítích neurony nepracují synchronně.
+
+## Výsledek
+Hopfieldova síť úspěšně ukládá a rekonstruuje binární vzory. Dokáže opravit poškozené vstupy a vrátit se k nejbližšímu uloženému vzoru.
+
+## Obrázky
+### Hopfieldova síť - Před a po Rekonstrukci
+![Hopfield Network before Recall](res/screenshots/hopfield_2.png)
+![Hopfield Network after Recall](res/screenshots/hopfield_1.png)
+
+
