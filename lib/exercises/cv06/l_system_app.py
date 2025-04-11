@@ -3,6 +3,7 @@ import math
 from tkinter import Canvas, Frame, Label, Scale, Entry, Button
 import tkinter.messagebox
 from collections import deque
+import time
 
 # F+F+F+F     F+F-F-FF+F+F-F          90
 # F++F++F     F+F--F+F                60
@@ -71,6 +72,7 @@ class LSystemApp:
         iterations = int(iterations)
 
         system = self.generate_l_system(axiom, rule, iterations)
+        print("System generated")
         # print(system)
 
         self.canvas.delete("all")
@@ -98,9 +100,11 @@ class LSystemApp:
         current_angle = self.start_angle
         stack = deque()
         
+        last_update_time = time.time()
         for i, cmd in enumerate(system):
-            if cmd == 'F' and i % max((len(system) // 1000), 1) == 0:
+            if time.time() - last_update_time >= 0.02:
                 self.root.update()
+                last_update_time = time.time()
 
             if cmd == 'F':
                 new_x = x + scale * math.cos(math.radians(current_angle))
@@ -129,8 +133,11 @@ class LSystemApp:
         
         stack = deque()
         
+        last_update_time = time.time()
         for cmd in system:
-            self.root.update()
+            if time.time() - last_update_time >= 0.02:
+                self.root.update()
+                last_update_time = time.time()
 
             if cmd == 'F':
                 x += math.cos(math.radians(current_angle))
