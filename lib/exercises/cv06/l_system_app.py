@@ -1,6 +1,7 @@
 import tkinter
 import math
 from tkinter import Canvas, Frame, Label, Scale, Entry, Button
+from turtle import ScrolledCanvas
 import tkinter.messagebox
 from collections import deque
 import time
@@ -14,6 +15,7 @@ class LSystemApp:
 
     def __init__(self, start_angle = 0):
         self.start_angle = start_angle
+        self.should_stop = False
 
     def run(self):
         self.root = tkinter.Tk()
@@ -44,8 +46,10 @@ class LSystemApp:
         self.value_label.grid(row=0, column=1, padx=2, sticky="w")
         self.frame_scale.grid(row=1, column=3, padx=5)
 
-        self.button_draw = Button(self.frame_controls, text="Draw", width=10, command=self.draw)
-        self.button_draw.grid(row=0, column=4, rowspan=2, sticky="nsew")
+        self.button_draw = Button(self.frame_controls, text="Draw", width=12, command=self.draw)
+        self.button_draw.grid(row=0, column=4, rowspan=2, padx=5, sticky="nsew")
+        self.button_stop = Button(self.frame_controls, text="Stop", width=12, command=self.stop_draw, state=tkinter.DISABLED)
+        self.button_stop.grid(row=0, column=5, rowspan=2, padx=5, sticky="nsew")
 
         self.canvas = Canvas(self.root, bg="white")
         self.canvas.pack(fill=tkinter.BOTH, expand=True, padx=10, pady=10)
@@ -56,7 +60,9 @@ class LSystemApp:
         if self.button_draw["state"] == tkinter.DISABLED:
             return
         
+        self.should_stop = False
         self.button_draw.config(state=tkinter.DISABLED)
+        self.button_stop.config(state=tkinter.NORMAL)
 
         axiom = self.entry_axiom.get()
         rule = self.entry_rules.get()
@@ -79,6 +85,10 @@ class LSystemApp:
         self.draw_l_system(system, angle)
 
         self.button_draw.config(state=tkinter.NORMAL)
+        self.button_stop.config(state=tkinter.DISABLED)
+
+    def stop_draw(self):
+        self.should_stop = True
 
     def draw_l_system(self, system, angle):
         # Výpočet hranic kreslení pro správné škálování
@@ -102,6 +112,9 @@ class LSystemApp:
         
         last_update_time = time.time()
         for i, cmd in enumerate(system):
+            if self.should_stop:
+                return
+            
             if time.time() - last_update_time >= 0.02:
                 self.root.update()
                 last_update_time = time.time()
@@ -128,13 +141,16 @@ class LSystemApp:
         x, y = 0, 0
         current_angle = self.start_angle
         
-        min_x, min_y = 0, 0
-        max_x, max_y = 0, 0
+        min_x, min_y = -1, -1
+        max_x, max_y = 1, 1
         
         stack = deque()
         
         last_update_time = time.time()
         for cmd in system:
+            if self.should_stop:
+                return min_x, min_y, max_x, max_y
+            
             if time.time() - last_update_time >= 0.02:
                 self.root.update()
                 last_update_time = time.time()
@@ -158,7 +174,8 @@ class LSystemApp:
             elif cmd == ']':
                 if stack:
                     x, y, current_angle = stack.pop()
-            
+        
+        # print(min_x, min_y, max_x, max_y)
         return min_x, min_y, max_x, max_y
 
     def generate_l_system(self, axiom, rule, iterations):
@@ -167,6 +184,8 @@ class LSystemApp:
             print(f"Generation {iteration} Iteration")
             next_gen = []
             for char in current:
+                if self.should_stop:
+                    return current
                 self.root.update()
 
                 if char == 'F':
