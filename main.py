@@ -6,6 +6,7 @@ from lib.exercises.cv01.perceptron import Perceptron
 from lib.exercises.cv02.neural_network import NeuralNetwork, Layer
 from lib.exercises.cv03.hopfield_app import HopfieldApp
 from lib.exercises.cv04.qlearning_app import QLearningApp
+from lib.exercises.cv06.l_system_app import LSystemApp
 
 def perceptron_test():
     np.random.seed(13)
@@ -81,6 +82,7 @@ def main():
         'XOR problem',
         'Hopfield',
         'QLearning',
+        'LSystem',
         'Exit'
     ])
 
@@ -95,6 +97,8 @@ def main():
                     HopfieldApp().run()
                 case 'qlearning':
                     QLearningApp().run()
+                case 'lsystem':
+                    LSystemApp().run()
                 case None | 'exit':
                     break
         except KeyboardInterrupt:
