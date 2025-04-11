@@ -4,6 +4,11 @@ from tkinter import Canvas, Frame, Label, Scale, Entry, Button
 import tkinter.messagebox
 from collections import deque
 
+# F+F+F+F     F+F-F-FF+F+F-F          90
+# F++F++F     F+F--F+F                60
+# F           F[+F]F[-F]F             pi/7
+# F           FF+[+F-F-F]-[-F+F+F]    pi/8
+
 class LSystemApp:
 
     def __init__(self, start_angle = 0):
@@ -82,7 +87,7 @@ class LSystemApp:
         canvas_height = self.canvas.winfo_height()        
         width = max_x - min_x
         height = max_y - min_y        
-        scale = min(canvas_width / width * 0.9, canvas_height / height * 0.9) if width > 0 and height > 0 else 10
+        scale = min(canvas_width / width * 0.9, canvas_height / height * 0.9)
         
         # Start
         start_x = canvas_width / 2 - (min_x + max_x) / 2 * scale
