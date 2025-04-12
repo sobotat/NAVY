@@ -7,6 +7,7 @@ from lib.exercises.cv02.neural_network import NeuralNetwork, Layer
 from lib.exercises.cv03.hopfield_app import HopfieldApp
 from lib.exercises.cv04.qlearning_app import QLearningApp
 from lib.exercises.cv06.l_system_app import LSystemApp
+from lib.exercises.cv07.ifs_app import IFSApp
 
 def perceptron_test():
     np.random.seed(13)
@@ -83,6 +84,7 @@ def main():
         'Hopfield',
         'QLearning',
         'LSystem',
+        'IFS',
         'Exit'
     ])
 
@@ -99,6 +101,8 @@ def main():
                     QLearningApp().run()
                 case 'lsystem':
                     LSystemApp().run()
+                case 'ifs':
+                    IFSApp().run()
                 case None | 'exit':
                     break
         except KeyboardInterrupt:
