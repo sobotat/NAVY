@@ -1,16 +1,25 @@
-import pyvista as pv
+import matplotlib.pyplot as plt
 import numpy as np
 
 class IFSGraph:
     def __init__(self):
-        self.plotter = pv.Plotter()
+        self.fig = plt.figure(figsize=(10, 8))
+        self.ax = self.fig.add_subplot(111, projection='3d')
     
     def display(self, points:np.ndarray, point_size=1.0, color='lightgreen', title='IFS Fraktál', background_color='white'):
-        cloud = pv.PolyData(points)
-        self.plotter.background_color = background_color
-
-        self.plotter.add_points(cloud, color=color, point_size=point_size, render_points_as_spheres=True)
-        self.plotter.add_title(title, font_size=16)
-
-        self.plotter.show_axes()
-        self.plotter.show()
+        x = points[:, 0]
+        y = points[:, 1]
+        z = points[:, 2] if points.shape[1] > 2 else np.zeros_like(x)
+        
+        self.fig.patch.set_facecolor(background_color)
+        self.ax.set_facecolor(background_color)
+        
+        self.ax.scatter(x, y, z, s=point_size, c=color, marker='o')
+        
+        self.ax.set_title(title, fontsize=16)
+        self.ax.set_xlabel('X')
+        self.ax.set_ylabel('Y')
+        self.ax.set_zlabel('Z')
+        
+        plt.tight_layout()
+        plt.show()

@@ -16,10 +16,10 @@ class IFSApp():
         ]
         
         fractal = IFSFractal(transformations)        
-        points = fractal.generate_points(iterations=500000)
+        points = fractal.generate_points(iterations=5000)
         
         graph = IFSGraph()
-        graph.display(points, point_size=4, title="Model 1")
+        graph.display(points, point_size=15, title="Model 1")
 
 
     def model2():
@@ -31,7 +31,7 @@ class IFSApp():
         ]
         
         fractal = IFSFractal(transformations)
-        points = fractal.generate_points(iterations=500000)
+        points = fractal.generate_points(iterations=5000)
         
         graph = IFSGraph()
-        graph.display(points, point_size=4, title="Model 2")
+        graph.display(points, point_size=15, title="Model 2")
