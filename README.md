@@ -213,3 +213,101 @@ Agent se úspěšně naučil optimální strategii pro dosažení cíle v prost�
 ## Obrázek
 ### Vizualizace Q-Learningu
 ![QLearning Visualization](res/screenshots/qlearning_1.png)
+
+# L-Systems
+## Popis problému
+Cílem bylo implementovat L-systémy (Lindenmayerovy systémy), což jsou formální gramatiky používané pro modelování růstu rostlin a generování fraktálních vzorů.
+
+## Proces implementace
+1. **Struktura systému**:
+   - `LSystemApp`: Třída pro vizualizaci a ovládání L-systémů.
+   - Implementace generování řetězce podle pravidel.
+   - Interpretace vygenerovaného řetězce jako grafických příkazů.
+
+2. **Komponenty systému**:
+   - Axiom: Počáteční řetězec.
+   - Pravidla: Definice pro nahrazení symbolů.
+   - Úhel: Určuje rotaci při kreslení.
+   - Iterace: Počet aplikací pravidel.
+
+3. **Proces generování**:
+   ```python
+   def generate_l_system(self, axiom, rule, iterations):
+       current = axiom
+       for _ in range(iterations):
+           next_gen = []
+           for char in current:
+               if char == 'F':
+                   next_gen.append(rule)
+               else:
+                   next_gen.append(char)
+           current = "".join(next_gen)
+       return current
+   ```
+
+4. **Interpretace symbolů**:
+   - F: Pohyb vpřed s kreslením čáry
+   - +: Rotace vlevo
+   - -: Rotace vpravo
+   - [: Uložení pozice
+   - ]: Návrat na uloženou pozici
+
+## Výsledek
+L-systém úspěšně generuje komplexní geometrické vzory a fraktální struktury pomocí jednoduchých pravidel.
+
+## Obrázeky
+![L-System 1](res/screenshots/lsystem_1.png)
+![L-System 2](res/screenshots/lsystem_2.png)
+![L-System 3](res/screenshots/lsystem_3.png)
+
+# IFS Fractals
+## Popis problému
+Cílem bylo implementovat Iterativní funkční systémy (IFS) pro generování fraktálů. IFS využívají sadu afinních transformací aplikovaných rekurzivně na body v prostoru k vytvoření složitých fraktálních struktur.
+
+## Proces implementace
+1. **Struktura systému**:
+   - `IFSFractal`: Třída pro generování bodů fraktálu pomocí transformací.
+   - `IFSGraph`: Třída pro vizualizaci vygenerovaných bodů.
+   - Implementace pomocí náhodného výběru transformací a jejich iterativní aplikace.
+
+2. **Hlavní komponenty**:
+   - Sada transformací definovaných maticemi.
+   - Generátor bodů pomocí náhodného procesu.
+   - Vizualizační nástroje pro zobrazení výsledků.
+
+3. **Proces generování**:
+   ```python
+   def generate_points(self, iterations:int, starting_point:np.ndarray=None):
+       current_point = starting_point or np.array([0.0, 0.0, 0.0])
+       points = np.zeros((iterations, 3))
+       
+       for i in range(iterations):
+           transform_idx = random.choices(range(self.num_transforms), k=1)[0]            
+           current_point = self.apply_transformation(current_point, transform_idx)
+           points[i] = current_point
+           
+       return points
+   ```
+
+4. **Aplikace transformací**:
+   - Pro afiní transformace se využívá rovnice viz obrázek, která je implementovaná v metodě `apply_transformation`.
+   ![IFS transformation](res/screenshots/ifs_transformations.png)
+   ```python
+   def apply_transformation(self, point:np.ndarray, transform_idx:int):
+         a, b, c, d, e, f, g, h, i, j, k, l = self.transformations[transform_idx]
+         x, y, z = point
+         
+         x_new = a * x + b * y + c * z + j
+         y_new = d * x + e * y + f * z + k
+         z_new = g * x + h * y + i * z + l
+         
+         return np.array([x_new, y_new, z_new])
+   ```
+
+## Výsledek
+IFS úspěšně generuje komplexní fraktální struktury pomocí opakovaného aplikování transformací na body v prostoru.
+
+## Obrázky
+### IFS Fraktály
+![IFS Fractal 1](res/screenshots/ifs_1.png)
+![IFS Fractal 2](res/screenshots/ifs_2.png)
