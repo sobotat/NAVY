@@ -1,6 +1,7 @@
 import math, time, tkinter
 from tkinter import Canvas, Frame, Label, Scale, Entry, Button
 from collections import deque
+from tqdm import tqdm
 
 # F+F+F+F     F+F-F-FF+F+F-F          90
 # F++F++F     F+F--F+F                60
@@ -107,7 +108,8 @@ class LSystemApp:
         stack = deque()
         
         last_update_time = time.time()
-        for i, cmd in enumerate(system):
+        for i in tqdm(range(len(system)), desc="Drawing", colour='green'):
+            cmd = system[i]
             if self.should_stop:
                 return
             
@@ -143,7 +145,8 @@ class LSystemApp:
         stack = deque()
         
         last_update_time = time.time()
-        for cmd in system:
+        for i in tqdm(range(len(system)), desc="Calculating Boundaries", colour='green'):
+            cmd = system[i]
             if self.should_stop:
                 return min_x, min_y, max_x, max_y
             
@@ -176,8 +179,7 @@ class LSystemApp:
 
     def generate_l_system(self, axiom, rule, iterations):
         current = axiom
-        for iteration in range(1, iterations + 1):
-            print(f"Generation {iteration} Iteration")
+        for _ in tqdm(range(iterations), desc="Running Iterations", colour='green'):
             next_gen = []
             for char in current:
                 if self.should_stop:
