@@ -1,10 +1,6 @@
-import tkinter
-import math
+import math, time, tkinter
 from tkinter import Canvas, Frame, Label, Scale, Entry, Button
-from turtle import ScrolledCanvas
-import tkinter.messagebox
 from collections import deque
-import time
 
 # F+F+F+F     F+F-F-FF+F+F-F          90
 # F++F++F     F+F--F+F                60
