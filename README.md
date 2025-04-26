@@ -379,3 +379,79 @@ Aplikace úspěšně zobrazuje Mandelbrotovu a Juliovu množinu s možností int
 ![Fraktál 1](res/screenshots/tea_1.png)
 ![Fraktál 2](res/screenshots/tea_2.png)
 ![Fraktál 3](res/screenshots/tea_3.png)
+
+# Fractal Terrain
+## Popis problému
+Cílem bylo vytvořit aplikaci pro generování fraktálního terénu pomocí algoritmu midpoint displacement. Tento algoritmus vytváří realisticky vypadající krajinu pomocí rekurzivního rozdělování úseček a náhodného posouvání středových bodů.
+
+## Proces implementace
+1. **Struktura projektu**:
+   - `TerrainSegment`: Třída reprezentující segment terénu (úsečku).
+   - `TerrainLayer`: Třída pro uchování vrstvy terénu a její barvy.
+   - `FractalTerrain`: Hlavní třída obsahující logiku pro generování fraktálního terénu.
+   - `TerrainGenerator`: Třída spojující fraktální algoritmus s vizualizací.
+   - `FractalTerrainApp`: GUI aplikace pro interakci s uživatelem.
+
+2. **Algoritmus Midpoint Displacement**:
+   - Začíná s jednou úsečkou definovanou počátečním a koncovým bodem.
+   - Rekurzivně rozděluje každou úsečku na dvě poloviny.
+   - Náhodně posouvá středový bod kolmo k původní úsečce.
+   - S každou iterací snižuje míru náhodnosti pro vytvoření realističtějšího vzhledu.
+
+   ```python
+   def generate_layer(self, start_x, start_y, end_x, end_y, iterations, randomness=0.15):
+      root_segment = TerrainSegment(start_x, start_y, end_x, end_y)
+      segments = [root_segment]
+      
+      for i in range(iterations):
+         new_segments = []
+         current_randomness = randomness * (0.8 ** i)
+         
+         for segment in segments:
+               mid_x, mid_y = segment.midpoint()
+               
+               # Výpočet kolmého vektoru pro posunutí bodu
+               dx = segment.end_x - segment.start_x
+               dy = segment.end_y - segment.start_y
+               length = segment.length()
+               
+               # Náhodné posunutí středového bodu kolmo k úsečce
+               if length > 0:
+                  perpendicular_x = -dy / length
+                  perpendicular_y = dx / length
+                  
+                  direction = 1 if random.random() > 0.5 else -1
+                  random_offset = direction * random.random() * current_randomness * length
+                  
+                  new_mid_x = mid_x + perpendicular_x * random_offset
+                  new_mid_y = mid_y + perpendicular_y * random_offset
+                  
+                  left_segment = TerrainSegment(segment.start_x, segment.start_y, new_mid_x, new_mid_y)
+                  right_segment = TerrainSegment(new_mid_x, new_mid_y, segment.end_x, segment.end_y)
+                  
+                  new_segments.append(left_segment)
+                  new_segments.append(right_segment)
+                  
+                  segment.children = [left_segment, right_segment]
+               else:
+                  new_segments.append(segment)
+         
+         segments = new_segments
+      
+      return segments
+   ```
+
+3. **Vyplnění terénu**:
+   - Algoritmus nejen generuje linii terénu, ale také vyplňuje oblast pod linií barvou.
+   - Využívá polygon pro vykreslení vyplněné oblasti mezi linií terénu a spodní hranicí plátna.
+
+4. **Vrstvení terénu**:
+   - Aplikace umožňuje přidávat více vrstev terénu na sebe s různými barvami.
+   - Každá vrstva může mít jiné počáteční a koncové body a různý počet iterací.
+
+## Výsledek
+Aplikace úspěšně generuje realisticky vypadající terén s možností přidávat více vrstev a vytvářet tak komplexní krajiny.
+
+## Obrázek
+### Ukázka fraktálního terénu
+![Fractal Terrain](res/screenshots/fractal_terrain_1.png)
