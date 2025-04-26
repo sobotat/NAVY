@@ -6,13 +6,13 @@ class FractalTerrain:
     def __init__(self):
         self.layers = []
         
-    def generate_layer(self, start_x, start_y, end_x, end_y, iterations, randomness=0.15):
+    def generate_layer(self, start_x, start_y, end_x, end_y, iterations, randomness=0.15, roughness=0.8):
         root_segment = TerrainSegment(start_x, start_y, end_x, end_y)
         segments = [root_segment]
         
         for i in range(iterations):
             new_segments = []
-            current_randomness = randomness * (0.8 ** i)
+            current_randomness = randomness * (roughness ** i)
             
             for segment in segments:
                 mid_x, mid_y = segment.midpoint()
