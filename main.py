@@ -9,6 +9,7 @@ from lib.exercises.cv04.qlearning_app import QLearningApp
 from lib.exercises.cv06.l_system_app import LSystemApp
 from lib.exercises.cv07.ifs_app import IFSApp
 from lib.exercises.cv08.fractal_app import FractalApp
+from lib.exercises.cv09.fractal_terrain_app import FractalTerrainApp
 
 def perceptron_test():
     np.random.seed(13)
@@ -87,6 +88,7 @@ def main():
         'LSystem',
         'IFS',
         'TEA',
+        'Fractal Terrain Generation',
         'Exit'
     ])
 
@@ -107,6 +109,8 @@ def main():
                     IFSApp().run()
                 case 'tea':
                     FractalApp()
+                case 'fractal-terrain-generation':
+                    FractalTerrainApp()
                 case None | 'exit':
                     break
         except KeyboardInterrupt:
