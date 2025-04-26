@@ -87,7 +87,7 @@ class FractalTerrainApp:
         ttk.Spinbox(controls_row1, from_=0, to=self.height, width=5, textvariable=self.end_y_var).pack(side=tk.LEFT, padx=(0, 15))
         
         ttk.Label(controls_row1, text="Iterations:").pack(side=tk.LEFT, padx=(0, 5))
-        ttk.Spinbox(controls_row1, from_=1, to=10, width=5, textvariable=self.iterations_var).pack(side=tk.LEFT)
+        ttk.Spinbox(controls_row1, from_=0, to=20, width=5, textvariable=self.iterations_var).pack(side=tk.LEFT)
         
         controls_row2 = ttk.Frame(self.control_frame)
         controls_row2.pack(fill=tk.X, pady=(0, 5))
