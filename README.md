@@ -311,3 +311,71 @@ IFS úspěšně generuje komplexní fraktální struktury pomocí opakovaného a
 ### IFS Fraktály
 ![IFS Fractal 1](res/screenshots/ifs_1.png)
 ![IFS Fractal 2](res/screenshots/ifs_2.png)
+
+# TEA
+## Popis problému
+Cílem bylo implementovat aplikaci pro zobrazování a interakci s různými typy fraktálů. Aplikace umožňuje vizualizaci Mandelbrotovy a Juliovy množiny, s možností přiblížení, oddálení a úpravy počtu iterací pro detailnější zobrazení.
+
+## Rozdíl mezi Mandelbrotovou a Juliovou množinou
+Obě množiny používají stejnou iterativní rovnici `z_{n+1} = z_n^2 + c`, ale s různými přístupy:
+
+- **Mandelbrotova množina**:
+  - Počáteční hodnota `z_0 = 0` pro všechny body
+  - Parametr `c` se mění pro každý bod v komplexní rovině
+  - Existuje pouze jedna Mandelbrotova množina
+
+- **Juliova množina**:
+  - Parametr `c` je konstantní pro celý fraktál
+  - Počáteční hodnota `z_0` je souřadnice bodu v komplexní rovině
+  - Existuje nekonečně mnoho Juliových množin, jedna pro každou hodnotu `c`
+
+## Proces implementace
+1. **Struktura projektu**:
+   - Vytvoření základní abstraktní třídy `Fractal`, která definuje společné rozhraní pro všechny typy fraktálů.
+   - Implementace konkrétních tříd `MandelbrotSet` a `JuliaSet`, které dědí z této základní třídy.
+   - Vytvoření třídy `FractalApp` pro GUI aplikace a interakci s uživatelem.
+
+2. **Implementace třídy `Fractal`**:
+   - Definice základních vlastností jako rozměry plátna, maximální počet iterací a meze pro zobrazení.
+   - Implementace metody `zoom` pro přiblížení/oddálení na konkrétní bod ve fraktálu.
+   - Abstraktní metoda `compute` pro výpočet konkrétního typu fraktálu.
+
+3. **Implementace `MandelbrotSet` a `JuliaSet`**:
+   - Výpočet hodnot komplexních bodů v definované oblasti.
+   - Iterativní algoritmus pro určení příslušnosti bodů k dané množině.
+   - Obarvení bodů na základě počtu iterací před "únikem" z množiny.
+
+   ```python
+   def compute(self):
+       re = np.linspace(self.x_min, self.x_max, self.width)
+       im = np.linspace(self.y_min, self.y_max, self.height)
+       
+       img_array = np.zeros((self.height, self.width, 3), dtype=np.uint8)
+       
+       for i in tqdm(range(self.width), "Computing"):
+           for j in range(self.height):
+               # Mandelbrot:
+               c = complex(re[i], im[j])
+               z = complex(0, 0)
+               # Julia:
+               # c je konstatní zadáne jako parametr
+               z = complex(re[i], im[j])
+
+               # Iterativní výpočet
+               # ...
+               
+               # Obarvení bodu podle počtu iterací
+               if iteration < self.max_iter:
+                   hue = iteration / self.max_iter
+                   r, g, b = colorsys.hsv_to_rgb(hue, 0.8, 1.0)
+                   img_array[j, i] = (int(r * 255), int(g * 255), int(b * 255))
+   ```
+
+## Výsledek
+Aplikace úspěšně zobrazuje Mandelbrotovu a Juliovu množinu s možností interaktivně prozkoumat různé části fraktálů.
+
+## Obrázky
+### Fraktály - Ukázky
+![Fraktál 1](res/screenshots/tea_1.png)
+![Fraktál 2](res/screenshots/tea_2.png)
+![Fraktál 3](res/screenshots/tea_3.png)
