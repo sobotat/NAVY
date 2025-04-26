@@ -1,4 +1,4 @@
-from lib.exercises.cv09.fractal_terrain import FractalTerrain
+from lib.exercises.cv09.objects.fractal_terrain import FractalTerrain
 
 class TerrainGenerator:
     def __init__(self, canvas, width, height):
