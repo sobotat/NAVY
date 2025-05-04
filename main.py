@@ -10,6 +10,7 @@ from lib.exercises.cv06.l_system_app import LSystemApp
 from lib.exercises.cv07.ifs_app import IFSApp
 from lib.exercises.cv08.fractal_app import FractalApp
 from lib.exercises.cv09.fractal_terrain_app import FractalTerrainApp
+from lib.exercises.cv12.forest_fire_app import ForestFireApp
 
 def perceptron_test():
     np.random.seed(13)
@@ -89,6 +90,7 @@ def main():
         'IFS',
         'TEA',
         'Fractal Terrain Generation',
+        'Forest Fire Cellular Automaton',
         'Exit'
     ])
 
@@ -111,6 +113,8 @@ def main():
                     FractalApp()
                 case 'fractal-terrain-generation':
                     FractalTerrainApp()
+                case 'forest-fire-cellular-automaton':
+                    ForestFireApp()
                 case None | 'exit':
                     break
         except KeyboardInterrupt:
