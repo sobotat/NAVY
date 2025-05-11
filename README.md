@@ -487,17 +487,12 @@ kde parametr 'a' řídí chování systému a vede k různým dynamickým režim
    - Použití natrénovaného modelu pro predikci chování logistické mapy v různých režimech.
    - Iterativní aplikace predikce pro simulaci dlouhodobého chování.
 
-## Výsledek
-Neuronová síť úspěšně zachytila klíčové vlastnosti logistické mapy včetně bifurkací a oblastí chaosu. Síť dokáže dobře predikovat chování systému pro široké rozpětí parametru 'a', a přestože v chaotických oblastech (a > 3.57) je přesná predikce obtížnější, model zachovává celkovou strukturu bifurkačního diagramu.
-
 ## Obrázky
 ### Bifurkační diagram logistické mapy
 ![Logistic Map](res/screenshots/logistic_map.png)
 
 ## Výsledek
-Porovnání skutečných dat logistické mapy (modře) a predikcí neuronové sítě (červeně) ukazuje, že model úspěšně zachytil komplexní strukturu bifurkačního diagramu, včetně oblastí s periodickým chováním i chaotických režimů.
-
-Based on the provided code files and images, I'll write a description of the Forest Fire Cellular Automaton in the same style as the README examples:
+Neuronová síť úspěšně zachytila klíčové vlastnosti logistické mapy včetně bifurkací a oblastí chaosu. Síť dokáže dobře predikovat chování systému pro široké rozpětí parametru 'a', a přestože v chaotických oblastech (a > 3.57) je přesná predikce obtížnější, model zachovává celkovou strukturu bifurkačního diagramu.
 
 # Forest Fire Cellular Automaton
 ## Popis problému
