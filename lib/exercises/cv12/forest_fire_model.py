@@ -58,9 +58,12 @@ class ForestFireModel:
                 current_state = self.grid[row, col]
                 
                 # Rule 1: Empty area or burnt tree can become a tree with probability p
-                if current_state == TileType.EMPTY.value or current_state == TileType.BURNT.value:
+                if current_state == TileType.EMPTY.value:
                     if np.random.random() < self.p:
                         new_grid[row, col] = TileType.TREE.value
+                elif current_state == TileType.BURNT.value:
+                    if np.random.random() < 0.3:
+                        new_grid[row, col] = TileType.EMPTY.value
                 
                 # Rule 2 & 3: Tree can catch fire from neighbors or spontaneously
                 elif current_state == TileType.TREE.value:
