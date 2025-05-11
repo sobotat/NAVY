@@ -10,6 +10,7 @@ from lib.exercises.cv06.l_system_app import LSystemApp
 from lib.exercises.cv07.ifs_app import IFSApp
 from lib.exercises.cv08.fractal_app import FractalApp
 from lib.exercises.cv09.fractal_terrain_app import FractalTerrainApp
+import lib.exercises.cv10.logistic_map as logistic_map
 from lib.exercises.cv12.forest_fire_app import ForestFireApp
 
 def perceptron_test():
@@ -90,6 +91,7 @@ def main():
         'IFS',
         'TEA',
         'Fractal Terrain Generation',
+        'Logistic Map',
         'Forest Fire Cellular Automaton',
         'Exit'
     ])
@@ -113,6 +115,8 @@ def main():
                     FractalApp()
                 case 'fractal-terrain-generation':
                     FractalTerrainApp()
+                case 'logistic-map':
+                    logistic_map.run()
                 case 'forest-fire-cellular-automaton':
                     ForestFireApp()
                 case None | 'exit':
