@@ -455,3 +455,106 @@ Aplikace úspěšně generuje realisticky vypadající terén s možností přid
 ## Obrázek
 ### Ukázka fraktálního terénu
 ![Fractal Terrain](res/screenshots/fractal_terrain_1.png)
+
+# Logistic Map Neural Network
+## Popis problému
+Cílem bylo vytvořit neuronovou síť, která dokáže předpovídat chování logistické mapy, což je jednoduchý matematický model, který vykazuje komplexní chování včetně bifurkace a chaosu. 
+
+Logistická mapa je definována rekurzivním vztahem:  
+x_{n+1} = a × x_n × (1 - x_n)
+
+kde parametr 'a' řídí chování systému a vede k různým dynamickým režimům.
+
+## Proces implementace
+1. **Generování dat**:
+   - Vytvoření bifurkačního diagramu v rozmezí parametru a = 2.5 až 4.0.
+   - Výpočet stabilních bodů logistické mapy po zahození počátečních iterací.
+   - Generování datových párů pro trénování neuronové sítě.
+
+2. **Struktura neuronové sítě**:
+   - Implementace plně propojené neuronové sítě se čtyřmi vrstvami.
+   - Vstupní vrstva: 2 neurony (hodnota x a parametr a).
+   - Skryté vrstvy: 64, 128 a 64 neuronů s ReLU aktivací.
+   - Výstupní vrstva: 1 neuron pro predikci následující hodnoty x.
+
+3. **Trénování**:
+   - Rozdělení dat na trénovací a testovací množinu.
+   - Použití algoritmu Adam pro optimalizaci s funkcí MSE jako ztrátovou funkcí.
+   - Trénování po dobu 30 epoch s velikostí dávky 128.
+   - Monitorování trénovací a validační ztráty.
+
+4. **Generování predikcí**:
+   - Použití natrénovaného modelu pro predikci chování logistické mapy v různých režimech.
+   - Iterativní aplikace predikce pro simulaci dlouhodobého chování.
+
+## Výsledek
+Neuronová síť úspěšně zachytila klíčové vlastnosti logistické mapy včetně bifurkací a oblastí chaosu. Síť dokáže dobře predikovat chování systému pro široké rozpětí parametru 'a', a přestože v chaotických oblastech (a > 3.57) je přesná predikce obtížnější, model zachovává celkovou strukturu bifurkačního diagramu.
+
+## Obrázky
+### Bifurkační diagram logistické mapy
+![Logistic Map](res/screenshots/logistic_map.png)
+
+## Výsledek
+Porovnání skutečných dat logistické mapy (modře) a predikcí neuronové sítě (červeně) ukazuje, že model úspěšně zachytil komplexní strukturu bifurkačního diagramu, včetně oblastí s periodickým chováním i chaotických režimů.
+
+Based on the provided code files and images, I'll write a description of the Forest Fire Cellular Automaton in the same style as the README examples:
+
+# Forest Fire Cellular Automaton
+## Popis problému
+Cílem bylo vytvořit simulaci šíření požáru v lese pomocí celulárního automatu. Model zobrazuje dynamickou interakci mezi stromy, ohněm a vyhořelými oblastmi, přičemž simuluje přirozený cyklus růstu a požárů v lesním ekosystému.
+
+## Proces implementace
+1. **Návrh modelu**:
+   - Implementace třídy `ForestFireModel` pro reprezentaci celulárního automatu s buňkami ve čtyřech stavech: prázdná (EMPTY), strom (TREE), hořící (BURNING) a vyhořelá (BURNT).
+   - Využití numpy pro efektivní manipulaci s 2D mřížkou představující les.
+
+2. **Pravidla automatu**:
+   - Prázdná místa nebo vyhořelé stromy mají šanci `p` stát se novým stromem.
+   - Strom se může vznítit dvěma způsoby:
+     - Pokud sousedí s hořícím stromem, okamžitě začne hořet.
+     - Spontánní vznícení s pravděpodobností `f` (simulace blesku).
+   - Hořící strom se v dalším kroku stane vyhořelým.
+   - Vyhořelý strom se může s určitou pravděpodobností změnit na prázdné místo.
+
+3. **Implementace sousedství**:
+   - Podpora dvou typů sousedství:
+     - Von Neumannovo (4 sousedé: sever, jih, východ, západ)
+     - Moorovo (8 sousedů: včetně diagonálních směrů)
+   ```python
+   def get_neighbors(self, row, col):
+       neighbors = []
+       
+       if self.neighborhood == "von_neumann":
+           for dr, dc in [(-1, 0), (0, 1), (1, 0), (0, -1)]:
+               nr, nc = row + dr, col + dc
+               if 0 <= nr < self.rows and 0 <= nc < self.cols:
+                   neighbors.append((nr, nc))
+       elif self.neighborhood == "moore":
+           for dr in [-1, 0, 1]:
+               for dc in [-1, 0, 1]:
+                   if dr == 0 and dc == 0:
+                       continue
+                   nr, nc = row + dr, col + dc
+                   if 0 <= nr < self.rows and 0 <= nc < self.cols:
+                       neighbors.append((nr, nc))
+       
+       return neighbors
+   ```
+
+4. **Vizualizace a interakce**:
+   - Vytvoření třídy `ForestFireApp` s grafickým rozhraním pomocí tkinter a matplotlib.
+   - Implementace animace pro vizualizaci dynamického vývoje lesa v čase.
+   - Interaktivní ovládací prvky pro nastavení parametrů:
+     - `p`: Pravděpodobnost vzniku nového stromu
+     - `f`: Pravděpodobnost spontánního vznícení
+     - `density`: Počáteční hustota lesa
+     - Typ sousedství: Von Neumann nebo Moore
+
+## Obrázky
+### Forest Fire Simulation s Von Neumannovým a Moorovým sousedstvím
+![Forest Fire Von Neumann](res/screenshots/forest_fire-von_neumann.png)
+
+![Forest Fire Moore](res/screenshots/forest_fire-moore.png)
+
+## Výsledek
+Aplikace úspěšně simuluje chování lesních požárů jako celulárního automatu a umožňuje studovat, jak různé parametry ovlivňují dynamiku systému. Uživatel může pozorovat emergentní vzory šíření ohně, obnovy lesa a cyklických procesů, které se vyskytují v reálných ekosystémech.
